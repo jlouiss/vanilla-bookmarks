@@ -26,6 +26,15 @@ h3 {
   font-size: 1.6rem;
 }
 
+input {
+  background-color: var(--off-white);
+  border: none;
+  border-bottom: 1px solid var(--grey);
+  padding: .4rem;
+  margin-top: .4rem;
+  width: 18rem;
+}
+
 
 section.overview {
   padding: 2rem 10rem;
@@ -49,15 +58,6 @@ section.submit-link-form form .invalid-url-error {
   display: none;
 }
 
-section.submit-link-form form input {
-  background-color: var(--off-white);
-  border: none;
-  border-bottom: 1px solid var(--grey);
-  padding: .4rem;
-  margin-top: .4rem;
-  width: 18rem;
-}
-
 section.submit-link-form form button {
   background-color: var(--off-white);
   border-radius: 0;
@@ -79,4 +79,21 @@ section.submit-link-form form button:not(.disabled):hover {
 section.submit-link-form form button.disabled {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+section.bookmark-list > ul > li.bookmark {
+  padding: .4rem 0;
+  color: var(--grey-light);
+}
+
+section.bookmark-list > ul > li.bookmark a {
+  color: var(--grey-light);
+}
+
+section.bookmark-list > ul > li.bookmark a:hover {
+  color: var(--black) !important;
+}
+
+section.bookmark-list > ul > li.bookmark a:visited {
+  color: var(--grey-light);
 }

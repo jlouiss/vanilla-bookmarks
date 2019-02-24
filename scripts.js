@@ -1,7 +1,8 @@
 const links = [];
+let currentPage = 0;
 
 /**
- * adds event listeners and loads bookmarks
+ * add event listeners and loads bookmarks
  */
 function setup() {
   console.log('setup');
@@ -18,15 +19,6 @@ function loadPersistedBookmarks() {
 }
 
 /**
- * append a link to saved bookmarks
- */
-function addLink(event) {
-  console.log('adding link');
-  console.log(event);
-  event.preventDefault();
-}
-
-/**
  * save bookmarks to persistent storage
  */
 function persistBookmarks() {
@@ -34,7 +26,8 @@ function persistBookmarks() {
 
 /**
  * Validate link through a RegExp, then check if the URL exists
- * @param event
+ * @param url
+ * @returns {Promise<void>}
  */
 async function validateURL({target: {value: url}}) {
   // https://stackoverflow.com/a/9284473/6174480
@@ -62,3 +55,53 @@ async function validateURL({target: {value: url}}) {
   }
 }
 
+/**
+ * append a link to saved bookmarks
+ * @param event
+ * @returns {boolean}
+ */
+async function addLink(event) {
+  event.preventDefault();
+
+  const url = document.querySelector('input#url').value;
+  console.log(url);
+
+  links.push(url);
+  renderLinks();
+  return false;
+}
+
+// TODO: editLink (replace with input field)
+
+// TODO: updateLink (update in list)
+
+// TODO: deleteLink (delete from list)
+
+// render a bookmark page
+function renderLinks() {
+  const urls = [
+    'https://phantom.land',
+    'https://google.com',
+    'https://twitter.com',
+    'https://facebook.com',
+  ];
+
+  const bookmarkList = document.querySelector('.bookmark-list > ul');
+
+  [...urls, ...urls, ...urls, ...urls, ...urls, ...urls, ...urls, ...urls]
+    .forEach(url =>{
+      const listElement = document.createElement('li');
+      const anchor = document.createElement('a');
+      const text = document.createTextNode(url);
+
+      anchor.title = url;
+      anchor.href = url;
+      anchor.appendChild(text); // text into <a>
+
+      listElement.classList.add('bookmark');
+      listElement.appendChild(anchor); // <a> into <li>
+
+      bookmarkList.appendChild(listElement); // <li> into <ul>
+    });
+
+}
