@@ -16,6 +16,8 @@ function setup() {
  */
 function loadPersistedBookmarks() {
   console.log('loading bookmarks');
+  renderLinks();
+  renderPagination();
 }
 
 /**
@@ -67,16 +69,21 @@ async function addLink(event) {
   console.log(url);
 
   links.push(url);
+  // TODO: display confirmation page
   renderLinks();
   return false;
 }
 
 // TODO: editLink (replace with input field)
+function editLink() {}
 
 // TODO: updateLink (update in list)
+function updateLink() {}
 
 // TODO: deleteLink (delete from list)
+function deleteLink() {}
 
+// TODO: include pagination
 // render a bookmark page
 function renderLinks() {
   const urls = [
@@ -105,3 +112,6 @@ function renderLinks() {
     });
 
 }
+
+//TODO: render new pagination
+function renderPagination() {}

@@ -44,6 +44,8 @@ section.overview h1 {
   text-align: center;
 }
 
+
+/** Submit Link Form **/
 section.submit-link-form {
   padding: 1rem 0;
 }
@@ -80,7 +82,10 @@ section.submit-link-form form button.disabled {
   cursor: not-allowed;
   pointer-events: none;
 }
+/** Submit Link Form **/
 
+
+/** Bookmark List **/
 section.bookmark-list > ul > li.bookmark {
   padding: .4rem 0;
   color: var(--grey-light);
@@ -97,3 +102,4 @@ section.bookmark-list > ul > li.bookmark a:hover {
 section.bookmark-list > ul > li.bookmark a:visited {
   color: var(--grey-light);
 }
+/** Bookmark List **/
