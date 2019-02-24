@@ -35,7 +35,7 @@ input {
   width: 18rem;
 }
 
-
+/** Overview **/
 section.overview {
   padding: 2rem 10rem;
 }
@@ -44,6 +44,13 @@ section.overview h1 {
   text-align: center;
 }
 
+@media(min-width: 1024px) {
+  section.overview {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+}
+/** Overview **/
 
 /** Submit Link Form **/
 section.submit-link-form {
