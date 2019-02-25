@@ -129,11 +129,14 @@ function renderBookmarks(pageNumber = pagination.currentPage) {
  */
 function renderLinks(links, pageNumber) {
   pagination.totalBookmarks = links.length;
+  pagination.currentPage = pageNumber;
+
   const lowerBound = pageNumber * pagination.limit;
   const upperBound = (pageNumber + 1) * pagination.limit;
   const bookmarkList = document.querySelector('.bookmark-list > ul');
   bookmarkList.innerHTML = ''; // clean list
 
+  console.log(lowerBound, upperBound);
   // render links
   links.slice(lowerBound, upperBound)
     .forEach(link => {
@@ -191,7 +194,7 @@ function renderPagination() {
   const pageList = document.querySelector('.pagination > .pages');
   pageList.innerHTML = ''; // empty list
 
-  for (let i = 0; i < numberOfPages - 1; i++) {
+  for (let i = 0; i < numberOfPages; i++) {
     const page = document.createElement('a');
     const text = document.createTextNode(`${i}`);
     page.classList.add('page-nav');
@@ -209,7 +212,7 @@ function handlePageNavClick(event) {
   if (!event.target.classList.contains('page-nav'))
     return;
 
-  const pageNumber = event.target.getAttribute('data-page-number');
+  const pageNumber = parseInt(event.target.getAttribute('data-page-number'), 10);
   renderBookmarks(pageNumber);
 }
 
@@ -217,12 +220,12 @@ function handlePageNavClick(event) {
  * go to previous page
  */
 function renderPreviousPage() {
-  renderBookmarks(pagination.currentPage + 1);
+  renderBookmarks(pagination.currentPage - 1);
 }
 
 /**
  * go to next page
  */
 function renderNextPage() {
-  renderBookmarks(pagination.currentPage - 1);
+  renderBookmarks(pagination.currentPage + 1);
 }
