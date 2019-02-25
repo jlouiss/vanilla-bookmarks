@@ -62,6 +62,10 @@ section.submit-link-form {
   padding: 1rem 0;
 }
 
+section.submit-link-form h3 {
+  margin-bottom: 1rem;
+}
+
 section.submit-link-form form > * {
   display: block;
 }
@@ -102,10 +106,27 @@ section.submit-link-form form button.disabled {
 
 
 /** Bookmark List **/
+section.bookmark-list {
+  padding: 1.2rem 0;
+}
+
+section.bookmark-list h3 {
+  margin-bottom: 1rem;
+}
+
 section.bookmark-list > ul > li.bookmark {
   padding: .4rem 0;
   color: var(--grey-light);
 }
+
+section.bookmark-list > ul > li.bookmark:first-of-type {
+  padding-top: 0;
+}
+
+section.bookmark-list > ul > li.bookmark:last-of-type {
+  padding-bottom: 0;
+}
+
 
 section.bookmark-list > ul > li.bookmark a {
   color: var(--grey-light);
@@ -119,3 +140,29 @@ section.bookmark-list > ul > li.bookmark a:visited {
   color: var(--grey-light);
 }
 /** Bookmark List **/
+
+
+/** Pagination **/
+section.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+section.pagination > span {
+  padding: 0 .4rem;
+}
+
+section.pagination a.page-nav {
+  color: var(--grey-light);
+  text-decoration: underline;
+  padding: 0 .1rem;
+}
+
+section.pagination a.page-nav:not(.disabled):not(.current) {
+  cursor: pointer;
+}
+
+section.pagination a.page-nav:not(.disabled):not(.current):hover {
+  color: var(--black);
+}
+/** Pagination **/
