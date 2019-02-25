@@ -13,6 +13,7 @@ function setup() {
   initializeDatabase(renderBookmarks);
   document.querySelector('input#url').addEventListener('keyup', validateURL);
   document.querySelector('.submit-link-form > form').addEventListener('submit', addLink);
+  document.querySelector('.pages').addEventListener('click', handlePageNavClick);
 }
 
 /**
@@ -105,30 +106,31 @@ function deleteLink() {
 // TODO: include pagination
 /**
  * get bookmarks from database and render
+ * @param pageNumber
  */
-function renderBookmarks() {
+function renderBookmarks(pageNumber = pagination.currentPage) {
   const request = window.indexedDB.open(DB_NAME, 1);
   request.onerror = console.error;
-  request.onsuccess = event => {
+  request.onsuccess = () => {
     const DB = request.result;
     const transaction = DB.transaction(OBJECT_STORE_NAME, 'readwrite');
     const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
     const readRequest = objectStore.getAll();
 
     readRequest.onerror = console.error;
-    readRequest.onsuccess = () => renderLinks(readRequest.result)
+    readRequest.onsuccess = () => renderLinks(readRequest.result, pageNumber)
   };
 }
 
 /**
  * visualize links in application
  * @param links
- * @param page
+ * @param pageNumber
  */
-function renderLinks(links, page = pagination.currentPage) {
+function renderLinks(links, pageNumber) {
   pagination.totalBookmarks = links.length;
-  const lowerBound = page * pagination.limit;
-  const upperBound = (page + 1) * pagination.limit;
+  const lowerBound = pageNumber * pagination.limit;
+  const upperBound = (pageNumber + 1) * pagination.limit;
   const bookmarkList = document.querySelector('.bookmark-list > ul');
   bookmarkList.innerHTML = ''; // clean list
 
@@ -188,10 +190,12 @@ function renderPagination() {
   // render pages
   const pageList = document.querySelector('.pagination > .pages');
   pageList.innerHTML = ''; // empty list
+
   for (let i = 0; i < numberOfPages - 1; i++) {
     const page = document.createElement('a');
-    const text = document.createTextNode(i);
+    const text = document.createTextNode(`${i}`);
     page.classList.add('page-nav');
+    page.setAttribute('data-page-number', `${i}`);
 
     if (i === pagination.currentPage)
       page.classList.add('current');
@@ -201,12 +205,24 @@ function renderPagination() {
   }
 }
 
-// TODO: render previous page
-function renderPreviousPage() {
+function handlePageNavClick(event) {
+  if (!event.target.classList.contains('page-nav'))
+    return;
 
+  const pageNumber = event.target.getAttribute('data-page-number');
+  renderBookmarks(pageNumber);
 }
 
-// TODO: render next page
-function renderNextPage() {
+/**
+ * go to previous page
+ */
+function renderPreviousPage() {
+  renderBookmarks(pagination.currentPage + 1);
+}
 
+/**
+ * go to next page
+ */
+function renderNextPage() {
+  renderBookmarks(pagination.currentPage - 1);
 }
