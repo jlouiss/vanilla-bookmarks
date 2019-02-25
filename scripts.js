@@ -55,7 +55,7 @@ async function validateURL({target: {value: url}}) {
  */
 function addLink(event) {
   event.preventDefault();
-
+  // TODO: display confirmation page
   const url = document.querySelector('input#url').value;
   const name = document.querySelector('input#name').value;
   const request = window.indexedDB.open(DB_NAME, 1);
@@ -72,12 +72,19 @@ function addLink(event) {
     objectStore.put({ url, name });
     transaction.oncomplete = DB.close;
     renderBookmarks();
+    resetForm();
   };
 
-
-  // TODO: display confirmation page
   return false;
 }
+
+/**
+ * reset form inputs
+ */
+function resetForm() {
+  document.querySelectorAll('.submit-link-form form input').forEach(input => input.value = '');
+}
+
 
 // TODO: editLink (replace with input field)
 function editLink() {
@@ -115,10 +122,13 @@ function renderBookmarks() {
  */
 function renderLinks(links) {
   const bookmarkList = document.querySelector('.bookmark-list > ul');
+  bookmarkList.innerHTML = ''; // clean list
 
+  // render links
   links.forEach(link => {
     const listElement = document.createElement('li');
     const anchor = document.createElement('a');
+    const name = document.createTextNode(`${link.name} - `);
     const text = document.createTextNode(link.url);
 
     anchor.title = link.url;
@@ -128,6 +138,7 @@ function renderLinks(links) {
     listElement.classList.add('bookmark');
 
     anchor.appendChild(text); // text into <a>
+    listElement.appendChild(name); // text into <li>
     listElement.appendChild(anchor); // <a> into <li>
     bookmarkList.appendChild(listElement); // <li> into <ul>
   });
