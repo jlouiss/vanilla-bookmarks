@@ -13,6 +13,7 @@ function setup() {
   document.querySelector('input#url').addEventListener('keyup', validateURL);
   document.querySelector('.submit-link-form > form').addEventListener('submit', addLink);
   document.querySelector('.pages').addEventListener('click', handlePageNavClick);
+  document.querySelector('.bookmark-list > ul').addEventListener('click', handleDeleteClick);
 }
 
 /**
@@ -108,10 +109,12 @@ function editLink() {
 function updateLink() {
 }
 
-// TODO: deleteLink (delete from list)
-function deleteLink() {
-  // delete
-  // reload
+function handleDeleteClick(event) {
+  if (!event.target.classList.contains('delete'))
+    return;
+
+  const key = parseInt(event.target.getAttribute('data-key'), 10);
+  deleteByKey(key, () => renderBookmarks(pagination.currentPage));
 }
 
 /**

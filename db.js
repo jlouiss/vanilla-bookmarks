@@ -92,3 +92,25 @@ function readAll(cb = () => {
     };
   };
 }
+
+/**
+ * delete bookmark by key
+ * @param key
+ */
+function deleteByKey(key, cb = () => {
+}) {
+  const dbRequest = window.indexedDB.open(DB_NAME, DB_VERSION);
+  dbRequest.onerror = console.error;
+  dbRequest.onsuccess = () => {
+    const db = dbRequest.result;
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
+    const deleteRequest = objectStore.delete(key);
+
+    deleteRequest.onerror = console.error;
+    deleteRequest.onsuccess = () => {
+      console.log('deleted');
+      cb();
+    };
+  };
+}
