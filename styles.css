@@ -174,3 +174,45 @@ section.pagination a.page-nav:not(.disabled):not(.current):hover {
   color: var(--black);
 }
 /** Pagination **/
+
+
+/** Confirmation **/
+section.link-addition-confirmation {
+  background-color: var(--off-white);
+  bottom: 0;
+  display: block;
+  left: 0;
+  opacity: 1;
+  padding: 4rem 8rem;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+section.link-addition-confirmation.hidden {
+  display: none;
+  opacity: 0;
+}
+
+section.link-addition-confirmation p:first-of-type {
+  color: var(--grey-light);
+  margin-bottom: 2.8rem;
+  margin-top: .6rem;
+}
+
+section.link-addition-confirmation a {
+  color: var(--grey);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+section.link-addition-confirmation a:hover {
+  color: var(--black);
+}
+
+@media (min-width: 1000px) {
+  section.link-addition-confirmation {
+    max-width: 980px;
+  }
+}
+/** Confirmation **/

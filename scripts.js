@@ -77,10 +77,27 @@ function addLink(event) {
     objectStore.put({url, name});
     transaction.oncomplete = DB.close;
     renderBookmarks();
+    showConfirmation();
     resetForm();
   };
 
   return false;
+}
+
+/**
+ * show confirmation to user
+ */
+function showConfirmation() {
+  const confirmation = document.querySelector('.link-addition-confirmation');
+  confirmation.classList.remove('hidden');
+}
+
+/**
+ * hide confirmation
+ */
+function closeConfirmation() {
+  const confirmation = document.querySelector('.link-addition-confirmation');
+  confirmation.classList.add('hidden');
 }
 
 /**
@@ -136,7 +153,6 @@ function renderLinks(links, pageNumber) {
   const bookmarkList = document.querySelector('.bookmark-list > ul');
   bookmarkList.innerHTML = ''; // clean list
 
-  console.log(lowerBound, upperBound);
   // render links
   links.slice(lowerBound, upperBound)
     .forEach(link => {
