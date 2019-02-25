@@ -59,3 +59,36 @@ function populate() {
     bookmarks.forEach((b) => store.put(b));
   };
 }
+
+/**
+ * read all bookmarks
+ * @callback cb
+ */
+function readAll(cb = () => {
+}) {
+  const dbRequest = window.indexedDB.open(DB_NAME, DB_VERSION);
+
+  dbRequest.onerror = console.error;
+  dbRequest.onsuccess = () => {
+    const db = dbRequest.result;
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
+    const cursorRequest = objectStore.openCursor();
+    const bookmarks = [];
+
+    transaction.oncomplete = db.close;
+    cursorRequest.onerror = console.error;
+    cursorRequest.onsuccess = () => {
+      // using the cursor you can also get the key.
+      const cursor = cursorRequest.result;
+      if (cursor) {
+        const {primaryKey: key, value} = cursor;
+        const bookmark = Object.assign({}, value, {key});
+        bookmarks.push(bookmark);
+        cursor.continue();
+      } else {
+        cb(bookmarks);
+      }
+    };
+  };
+}

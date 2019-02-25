@@ -58,18 +58,17 @@ function addLink(event) {
   const request = window.indexedDB.open(DB_NAME, DB_VERSION);
 
   request.onerror = console.error;
-  request.onsuccess = event => {
+  request.onsuccess = () => {
     const DB = request.result;
     const transaction = DB.transaction(OBJECT_STORE_NAME, 'readwrite');
     const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
-    const index = objectStore.index('name');
 
     DB.onerror = console.error;
 
     objectStore.put({url, name});
     transaction.oncomplete = DB.close;
-    renderBookmarks();
     showConfirmation();
+    renderBookmarks();
     resetForm();
   };
 
@@ -111,6 +110,8 @@ function updateLink() {
 
 // TODO: deleteLink (delete from list)
 function deleteLink() {
+  // delete
+  // reload
 }
 
 /**
@@ -118,30 +119,7 @@ function deleteLink() {
  * @param pageNumber
  */
 function renderBookmarks(pageNumber = pagination.currentPage) {
-  const dbRequest = window.indexedDB.open(DB_NAME, DB_VERSION);
-
-  dbRequest.onerror = console.error;
-  dbRequest.onsuccess = () => {
-    const db = dbRequest.result;
-    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
-    const object_store = transaction.objectStore(OBJECT_STORE_NAME);
-    const cursorRequest = object_store.openCursor();
-    const bookmarks = [];
-
-    cursorRequest.onerror = console.error;
-    cursorRequest.onsuccess = () => {
-      // using the cursor you can also get the key.
-      let cursor = cursorRequest.result;
-      if (cursor) {
-        const { primaryKey: key, value } = cursor;
-        const bookmark = { key, ...value };
-        bookmarks.push(bookmark);
-        cursor.continue();
-      }
-      else
-        renderLinks(bookmarks, pageNumber);
-    };
-  };
+  readAll(bookmarks => renderLinks(bookmarks, pageNumber));
 }
 
 /**
