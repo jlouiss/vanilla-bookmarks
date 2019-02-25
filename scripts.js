@@ -68,7 +68,7 @@ function addLink(event) {
 
     objectStore.put({url, name});
     transaction.oncomplete = DB.close;
-    showConfirmation({ url, name });
+    showConfirmation({url, name});
     renderBookmarks();
     resetForm();
   };
@@ -79,7 +79,7 @@ function addLink(event) {
 /**
  * show confirmation to user
  */
-function showConfirmation({ url, name }) {
+function showConfirmation({url, name}) {
   const confirmation = document.querySelector('.link-addition-confirmation');
   const bookmarkOutlet = document.querySelector('.bookmark-outlet');
 
@@ -137,7 +137,7 @@ function handleBookmarkAction(event) {
  * @param bookmark
  */
 function editLink(bookmark) {
-  const key = bookmark.getAttribute('data-key');
+  const key = parseInt(bookmark.getAttribute('data-key'), 10);
   const url = bookmark.getAttribute('href');
   const name = bookmark.getAttribute('title');
   window.scrollTo(0, 0);
@@ -160,6 +160,7 @@ function editLink(bookmark) {
   updateButton.innerHTML = 'Update';
   updateButton.classList.add('update');
   updateButton.classList.add('submit'); // necessary for validateURL()
+  updateButton.setAttribute('type', 'button');
   updateButton.addEventListener('click', updateLink);
   form.appendChild(updateButton);
 
@@ -173,6 +174,12 @@ function editLink(bookmark) {
    * save link and re-render bookmarks
    */
   function updateLink() {
+    const url = urlInput.value;
+    const name = nameInput.value;
+    editBookmark({url, name, key}, () => {
+      renderBookmarks(pagination.currentPage);
+      cancelEdit();
+    });
   }
 
   /**
@@ -183,12 +190,8 @@ function editLink(bookmark) {
     formTitle.innerHTML = 'Add Link';
     cancelButton.parentElement.removeChild(cancelButton);
     updateButton.parentElement.removeChild(updateButton);
-    submitButton.classList.remove('hidden');
+    saveButton.classList.remove('hidden');
   }
-}
-
-// TODO: updateLink (update in list)
-function updateLink() {
 }
 
 /**

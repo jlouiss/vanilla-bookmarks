@@ -33,8 +33,7 @@ function initializeDatabase(cb = () => {
 
     // first time:
     const DB = request.result;
-    const store = DB.createObjectStore(OBJECT_STORE_NAME, {autoIncrement: true});
-    store.createIndex('name', 'name', {unique: false});
+    DB.createObjectStore(OBJECT_STORE_NAME, {autoIncrement: true});
     // populate();
     cb();
   };
@@ -107,10 +106,49 @@ function deleteByKey(key, cb = () => {
     const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
     const deleteRequest = objectStore.delete(key);
 
+    transaction.oncomplete = db.close;
     deleteRequest.onerror = console.error;
     deleteRequest.onsuccess = () => {
       console.log('deleted');
       cb();
+    };
+  };
+}
+
+/**
+ * edit a bookmark
+ * @param bookmark
+ * @callback cb
+ */
+function editBookmark(bookmark, cb = () => {
+}) {
+  const request = window.indexedDB.open(DB_NAME, DB_VERSION);
+  request.onerror = console.error;
+  request.onsuccess = () => {
+    const db = request.result;
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const store = transaction.objectStore(OBJECT_STORE_NAME);
+    const cursorRequest = store.openCursor();
+
+    db.onerror = console.error;
+    transaction.oncomplete = db.close;
+    cursorRequest.onerror = console.error;
+
+    cursorRequest.onsuccess = () => {
+      const cursor = cursorRequest.result;
+      if (cursor) {
+        if (cursor.key === bookmark.key) {
+          const updateData = cursor.value;
+
+          updateData.name = bookmark.name;
+          updateData.url = bookmark.url;
+          const request = cursor.update(updateData);
+          request.onsuccess = cb;
+        }
+        console.log(cursor.value);
+
+        cursor.continue();
+      }
     };
   };
 }
