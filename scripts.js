@@ -13,7 +13,7 @@ function setup() {
   document.querySelector('input#url').addEventListener('keyup', validateURL);
   document.querySelector('.submit-link-form > form').addEventListener('submit', addLink);
   document.querySelector('.pages').addEventListener('click', handlePageNavClick);
-  document.querySelector('.bookmark-list > ul').addEventListener('click', handleDeleteClick);
+  document.querySelector('.bookmark-list > ul').addEventListener('click', handleBookmarkAction);
 }
 
 /**
@@ -115,20 +115,34 @@ function resetForm() {
   document.querySelectorAll('.submit-link-form form input').forEach(input => input.value = '');
 }
 
-// TODO: editLink (replace with input field)
-function editLink() {
+/**
+ * call delete or edit according to target
+ * @param event
+ */
+function handleBookmarkAction(event) {
+  if (!event.target.classList.contains('delete') || !event.target.classList.contains('edit'))
+    return;
+
+  const key = parseInt(event.target.getAttribute('data-key'), 10);
+
+  if (event.target.classList.contains('delete'))
+    deleteByKey(key, () => renderBookmarks(pagination.currentPage));
+
+  if (event.target.classList.contains('edit'))
+    editLink(event.target);
+}
+
+/**
+ * populate form and change form action to update link
+ * @param target
+ */
+function editLink(target) {
+  console.log(target);
+  window.scrollTo(0, 0);
 }
 
 // TODO: updateLink (update in list)
 function updateLink() {
-}
-
-function handleDeleteClick(event) {
-  if (!event.target.classList.contains('delete'))
-    return;
-
-  const key = parseInt(event.target.getAttribute('data-key'), 10);
-  deleteByKey(key, () => renderBookmarks(pagination.currentPage));
 }
 
 /**
