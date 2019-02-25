@@ -30,8 +30,8 @@ input {
   background-color: var(--off-white);
   border: none;
   border-bottom: 1px solid var(--grey);
-  padding: .4rem;
   margin-top: .4rem;
+  padding: .4rem;
   width: 18rem;
 }
 
@@ -115,8 +115,8 @@ section.bookmark-list h3 {
 }
 
 section.bookmark-list > ul > li.bookmark {
-  padding: .4rem 0;
   color: var(--grey-light);
+  padding: .4rem 0;
 }
 
 section.bookmark-list > ul > li.bookmark:first-of-type {
@@ -148,14 +148,22 @@ section.pagination {
   justify-content: center;
 }
 
-section.pagination > span {
-  padding: 0 .4rem;
-}
-
 section.pagination a.page-nav {
   color: var(--grey-light);
+  padding: 0 .4rem;
   text-decoration: underline;
-  padding: 0 .1rem;
+  user-select: none;
+}
+
+section.pagination a.page-nav.current {
+  color: var(--black);
+  pointer-events: none;
+  text-decoration: none !important;
+}
+
+section.pagination a.page-nav.disabled {
+  pointer-events: none;
+  text-decoration: none !important;
 }
 
 section.pagination a.page-nav:not(.disabled):not(.current) {
