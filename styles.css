@@ -203,10 +203,16 @@ section.link-addition-confirmation.hidden {
   opacity: 0;
 }
 
-section.link-addition-confirmation p:first-of-type {
+section.link-addition-confirmation p {
   color: var(--grey-light);
-  margin-bottom: 2.8rem;
+}
+
+section.link-addition-confirmation p:first-of-type {
   margin-top: .6rem;
+}
+
+section.link-addition-confirmation p:last-of-type {
+  margin-top: 2.8rem;
 }
 
 section.link-addition-confirmation a {

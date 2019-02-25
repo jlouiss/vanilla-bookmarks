@@ -68,7 +68,7 @@ function addLink(event) {
 
     objectStore.put({url, name});
     transaction.oncomplete = DB.close;
-    showConfirmation();
+    showConfirmation({ url, name });
     renderBookmarks();
     resetForm();
   };
@@ -79,8 +79,22 @@ function addLink(event) {
 /**
  * show confirmation to user
  */
-function showConfirmation() {
+function showConfirmation({ url, name }) {
   const confirmation = document.querySelector('.link-addition-confirmation');
+  const bookmarkOutlet = document.querySelector('.bookmark-outlet');
+
+  const bookmarkText = document.createTextNode(`${name} - `);
+  const bookmarkLink = document.createElement('a');
+  const bookmarkLinkText = document.createTextNode(url);
+
+  bookmarkLink.setAttribute('target', '_blank');
+  bookmarkLink.setAttribute('href', url);
+  bookmarkLink.appendChild(bookmarkLinkText);
+
+  bookmarkOutlet.innerHTML = ''; // clean
+  bookmarkOutlet.appendChild(bookmarkText);
+  bookmarkOutlet.appendChild(bookmarkLink);
+
   confirmation.classList.remove('hidden');
 }
 
