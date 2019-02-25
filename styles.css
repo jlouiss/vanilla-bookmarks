@@ -7,6 +7,7 @@
   --off-white: #f0f0f0;
   --red: #ff0200;
   --yellow: #fc0;
+  --dirty-yellow: #d0b050;
 
   background-color: var(--off-white);
   font-family: 'Roboto Mono', monospace;
@@ -84,7 +85,7 @@ section.submit-link-form form button {
   background-color: var(--off-white);
   border-radius: 0;
   border: 1px solid var(--grey);
-  display: block;
+  display: inline-block;
   margin-top: 1rem;
   padding: .4rem 1rem;
 }
@@ -93,14 +94,37 @@ section.submit-link-form form button:not(.disabled) {
   cursor: pointer;
 }
 
-section.submit-link-form form button:not(.disabled):hover {
+section.submit-link-form form button:not(.disabled):not(.cancel):hover {
   background-color: white;
   border-color: var(--black);
+}
+
+section.submit-link-form form button.update {
+  margin-right: .8rem;
+}
+
+section.submit-link-form form button.update:hover {
+  background-color: var(--yellow) !important;
+  border-color: var(--black) !important;
 }
 
 section.submit-link-form form button.disabled {
   cursor: not-allowed;
   pointer-events: none;
+}
+
+section.submit-link-form form button.cancel {
+  color: white;
+  background-color: var(--grey-light);
+}
+
+section.submit-link-form form button.cancel:hover {
+  border-color: var(--black);
+  background-color: var(--grey);
+}
+
+section.submit-link-form form button.hidden {
+  display: none;
 }
 /** Submit Link Form **/
 
@@ -140,13 +164,18 @@ section.bookmark-list > ul > li.bookmark a:visited {
   color: var(--grey-light);
 }
 
-section.bookmark-list > ul > li.bookmark .delete {
+section.bookmark-list > ul > li.bookmark .delete,
+section.bookmark-list > ul > li.bookmark .edit {
   cursor: pointer;
 }
 
 section.bookmark-list > ul > li.bookmark .delete:hover {
   color: var(--red) !important;
 }
+section.bookmark-list > ul > li.bookmark .edit:hover {
+  color: var(--dirty-yellow) !important;
+}
+
 /** Bookmark List **/
 
 

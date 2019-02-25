@@ -24,7 +24,7 @@ function setup() {
 async function validateURL({target: {value: url}}) {
   // https://stackoverflow.com/a/9284473/6174480
   const validUrlRegExp = new RegExp('^(?:(?:https?|ftp):\\/\\/)(?:\\S+(?::\\S*)?@)?(?:(?!(?:10|127)(?:\\.\\d{1,3}){3})(?!(?:169\\.254|192\\.168)(?:\\.\\d{1,3}){2})(?!172\\.(?:1[6-9]|2\\d|3[0-1])(?:\\.\\d{1,3}){2})(?:[1-9]\\d?|1\\d\\d|2[01]\\d|22[0-3])(?:\\.(?:1?\\d{1,2}|2[0-4]\\d|25[0-5])){2}(?:\\.(?:[1-9]\\d?|1\\d\\d|2[0-4]\\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\\.(?:[a-z\u00a1-\uffff]{2,}))\\.?)(?::\\d{2,5})?(?:[/?#]\\S*)?$', 'i');
-  const saveLinkButton = document.querySelector('.submit-link-form form button');
+  const saveLinkButton = document.querySelector('.submit-link-form form button.submit');
   const invalidUrlError = document.querySelector('.invalid-url-error');
 
   // check validity through regexp,
@@ -120,7 +120,7 @@ function resetForm() {
  * @param event
  */
 function handleBookmarkAction(event) {
-  if (!event.target.classList.contains('delete') || !event.target.classList.contains('edit'))
+  if (!event.target.classList.contains('delete') && !event.target.classList.contains('edit'))
     return;
 
   const key = parseInt(event.target.getAttribute('data-key'), 10);
@@ -129,16 +129,62 @@ function handleBookmarkAction(event) {
     deleteByKey(key, () => renderBookmarks(pagination.currentPage));
 
   if (event.target.classList.contains('edit'))
-    editLink(event.target);
+    editLink(event.target.parentNode.querySelector('a'));
 }
 
 /**
- * populate form and change form action to update link
- * @param target
+ * populate form and change form action to update bookmark
+ * @param bookmark
  */
-function editLink(target) {
-  console.log(target);
+function editLink(bookmark) {
+  const key = bookmark.getAttribute('data-key');
+  const url = bookmark.getAttribute('href');
+  const name = bookmark.getAttribute('title');
   window.scrollTo(0, 0);
+
+  const form = document.querySelector('.submit-link-form form');
+  const formTitle = document.querySelector('.submit-link-form .title');
+  const nameInput = document.querySelector('.submit-link-form input#name');
+  const urlInput = document.querySelector('.submit-link-form input#url');
+  const saveButton = document.querySelector('.submit-link-form form button');
+  const updateButton = document.createElement('button');
+  const cancelButton = document.createElement('button');
+
+  // change form and hide save button
+  formTitle.innerHTML = 'Update Link';
+  nameInput.value = name;
+  urlInput.value = url;
+  saveButton.classList.add('hidden');
+
+  // show update button
+  updateButton.innerHTML = 'Update';
+  updateButton.classList.add('update');
+  updateButton.classList.add('submit'); // necessary for validateURL()
+  updateButton.addEventListener('click', updateLink);
+  form.appendChild(updateButton);
+
+  // show cancel button
+  cancelButton.innerHTML = 'Cancel';
+  cancelButton.classList.add('cancel');
+  cancelButton.addEventListener('click', cancelEdit);
+  form.appendChild(cancelButton);
+
+  /**
+   * save link and re-render bookmarks
+   */
+  function updateLink() {
+  }
+
+  /**
+   * restore form to "Add Link" and save button
+   */
+  function cancelEdit() {
+    resetForm();
+    formTitle.innerHTML = 'Add Link';
+    cancelButton.parentElement.removeChild(cancelButton);
+    updateButton.parentElement.removeChild(updateButton);
+    submitButton.classList.remove('hidden');
+  }
 }
 
 // TODO: updateLink (update in list)
@@ -167,32 +213,35 @@ function renderLinks(links, pageNumber) {
   const bookmarkList = document.querySelector('.bookmark-list > ul');
   bookmarkList.innerHTML = ''; // clean list
 
+  const generateLinkElement = (text, key) => {
+    const anchor = document.createElement('a');
+    anchor.appendChild(document.createTextNode(text));
+    anchor.setAttribute('data-key', key);
+    return anchor;
+  };
+
   // render links
   links.slice(lowerBound, upperBound)
     .forEach(link => {
       const listElement = document.createElement('li');
-      const anchor = document.createElement('a');
       const name = document.createTextNode(`${link.name} - `);
-      const separator = document.createTextNode(' - ');
-      const text = document.createTextNode(link.url);
-      const deleteLink = document.createElement('a');
-      const deleteText = document.createTextNode('delete');
+      const anchor = generateLinkElement(link.url, link.key);
+      const deleteLink = generateLinkElement('delete', link.key);
+      const editLink = generateLinkElement('edit', link.key);
 
-      anchor.title = link.url;
-      anchor.href = link.url;
+      anchor.setAttribute('title', link.name);
+      anchor.setAttribute('href', link.url);
       anchor.setAttribute('target', '_blank');
-      anchor.setAttribute('data-key', link.key);
-      anchor.appendChild(text);
-
-      deleteLink.setAttribute('data-key', link.key);
-      deleteLink.appendChild(deleteText);
       deleteLink.classList.add('delete');
+      editLink.classList.add('edit');
       listElement.classList.add('bookmark');
 
       listElement.appendChild(name); // text into <li>
       listElement.appendChild(anchor); // <a> into <li>
-      listElement.appendChild(separator); // separator into <li>
+      listElement.appendChild(document.createTextNode(' - ')); // separator into <li>
       listElement.appendChild(deleteLink); // add <a>delete</a> into <li>
+      listElement.appendChild(document.createTextNode(' - ')); // separator into <li>
+      listElement.appendChild(editLink); // add <a>edit</a> into <li>
       bookmarkList.appendChild(listElement); // <li> into <ul>
     });
 
