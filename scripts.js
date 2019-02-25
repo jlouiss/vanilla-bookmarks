@@ -1,5 +1,9 @@
-const links = [];
-let currentPage = 0;
+const pagination = {
+  totalBookmarks: 0,
+  currentPage: 0,
+  start: 0,
+  limit: 20
+};
 
 /**
  * add event listeners and loads bookmarks
@@ -69,7 +73,7 @@ function addLink(event) {
 
     DB.onerror = console.error;
 
-    objectStore.put({ url, name });
+    objectStore.put({url, name});
     transaction.oncomplete = DB.close;
     renderBookmarks();
     resetForm();
@@ -119,31 +123,90 @@ function renderBookmarks() {
 /**
  * visualize links in application
  * @param links
+ * @param page
  */
-function renderLinks(links) {
+function renderLinks(links, page = pagination.currentPage) {
+  pagination.totalBookmarks = links.length;
+  const lowerBound = page * pagination.limit;
+  const upperBound = (page + 1) * pagination.limit;
   const bookmarkList = document.querySelector('.bookmark-list > ul');
   bookmarkList.innerHTML = ''; // clean list
 
   // render links
-  links.forEach(link => {
-    const listElement = document.createElement('li');
-    const anchor = document.createElement('a');
-    const name = document.createTextNode(`${link.name} - `);
-    const text = document.createTextNode(link.url);
+  links.slice(lowerBound, upperBound)
+    .forEach(link => {
+      const listElement = document.createElement('li');
+      const anchor = document.createElement('a');
+      const name = document.createTextNode(`${link.name} - `);
+      const text = document.createTextNode(link.url);
 
-    anchor.title = link.url;
-    anchor.href = link.url;
-    anchor.setAttribute('target', '_blank');
-    anchor.setAttribute('data-key', link.id);
-    listElement.classList.add('bookmark');
+      anchor.title = link.url;
+      anchor.href = link.url;
+      anchor.setAttribute('target', '_blank');
+      anchor.setAttribute('data-key', link.id);
+      listElement.classList.add('bookmark');
 
-    anchor.appendChild(text); // text into <a>
-    listElement.appendChild(name); // text into <li>
-    listElement.appendChild(anchor); // <a> into <li>
-    bookmarkList.appendChild(listElement); // <li> into <ul>
-  });
+      anchor.appendChild(text); // text into <a>
+      listElement.appendChild(name); // text into <li>
+      listElement.appendChild(anchor); // <a> into <li>
+      bookmarkList.appendChild(listElement); // <li> into <ul>
+    });
+
+  renderPagination();
 }
 
-//TODO: render new pagination
+/**
+ * update pagination
+ */
 function renderPagination() {
+  const prev = document.querySelector('.page-nav.prev');
+  const next = document.querySelector('.page-nav.next');
+  const numberOfPages = Math.ceil(pagination.totalBookmarks / pagination.limit);
+
+  // disable navigation when there are no other pages
+  if (numberOfPages === 1) {
+    prev.classList.add('disabled');
+    next.classList.add('disabled');
+  }
+  else {
+    prev.classList.remove('disabled');
+    next.classList.remove('disabled');
+  }
+
+  // disable next if there are no more pages
+  if (pagination.currentPage === numberOfPages - 1)
+    next.classList.add('disabled');
+  else
+    next.classList.remove('disabled');
+
+  // disable previous if you're on the first page
+  if (pagination.currentPage === 0)
+    prev.classList.add('disabled');
+  else
+    prev.classList.remove('disabled');
+
+  // render pages
+  const pageList = document.querySelector('.pagination > .pages');
+  pageList.innerHTML = ''; // empty list
+  for (let i = 0; i < numberOfPages - 1; i++) {
+    const page = document.createElement('a');
+    const text = document.createTextNode(i);
+    page.classList.add('page-nav');
+
+    if (i === pagination.currentPage)
+      page.classList.add('current');
+
+    page.appendChild(text);
+    pageList.append(page);
+  }
+}
+
+// TODO: render previous page
+function renderPreviousPage() {
+
+}
+
+// TODO: render next page
+function renderNextPage() {
+
 }
