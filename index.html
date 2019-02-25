@@ -8,6 +8,7 @@
   <title>Phantom Bookmarks</title>
   <link rel="shortcut icon" type="image/x-icon" href="https://phantom.land/assets/favicon/favicon.ico">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./db.js"></script>
   <script src="./scripts.js"></script>
 </head>
 <body onload="setup()">
@@ -18,8 +19,12 @@
   <section class="submit-link-form">
     <h3>Add Link</h3>
     <form>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" placeholder="Bookmark Name">
+
       <label for="url">URL</label>
       <input type="text" id="url" name="url" placeholder="Insert URL">
+
       <small class="invalid-url-error">URL is invalid (must begin with `http`) or doesn't exist</small>
       <button type="submit" class="disabled">Save</button>
     </form>

@@ -44,7 +44,7 @@ section.overview h1 {
   text-align: center;
 }
 
-@media(min-width: 1024px) {
+@media(min-width: 1000px) {
   section.overview {
     max-width: 980px;
     margin: 0 auto;
@@ -59,6 +59,10 @@ section.submit-link-form {
 
 section.submit-link-form form > * {
   display: block;
+}
+
+section.submit-link-form form > input:first-of-type {
+  margin-bottom: 1rem;
 }
 
 section.submit-link-form form .invalid-url-error {
