@@ -1,4 +1,5 @@
 const DB_NAME = 'PhantomBookmarks';
+const DB_VERSION = 1;
 const OBJECT_STORE_NAME = 'Bookmarks';
 
 /**
@@ -15,7 +16,7 @@ function initializeDatabase(cb = () => {
     alert('I\'m sorry, your browser doesn\'t support a stable version of IndexedDB. This application won\'t work 😟');
   }
 
-  const request = window.indexedDB.open(DB_NAME, 1);
+  const request = window.indexedDB.open(DB_NAME, DB_VERSION);
   request.onerror = function (event) {
     console.error(event);
     alert('Something went wrong while loading the database. Please reload.');
@@ -47,7 +48,7 @@ function populate() {
     name: letter,
     url: `https://google.com/${letter}`,
   }));
-  const request = window.indexedDB.open(DB_NAME, 1);
+  const request = window.indexedDB.open(DB_NAME, DB_VERSION);
   request.onerror = console.error;
   request.onsuccess = () => {
     const db = request.result;
