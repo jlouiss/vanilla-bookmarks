@@ -9,17 +9,10 @@ const pagination = {
  * add event listeners and loads bookmarks
  */
 function setup() {
-  console.log('setup');
   initializeDatabase(renderBookmarks);
   document.querySelector('input#url').addEventListener('keyup', validateURL);
   document.querySelector('.submit-link-form > form').addEventListener('submit', addLink);
   document.querySelector('.pages').addEventListener('click', handlePageNavClick);
-}
-
-/**
- * save bookmarks to persistent storage
- */
-function persistBookmarks() {
 }
 
 /**
@@ -60,7 +53,6 @@ async function validateURL({target: {value: url}}) {
  */
 function addLink(event) {
   event.preventDefault();
-  // TODO: display confirmation page
   const url = document.querySelector('input#url').value;
   const name = document.querySelector('input#name').value;
   const request = window.indexedDB.open(DB_NAME, 1);
@@ -97,7 +89,9 @@ function showConfirmation() {
  */
 function closeConfirmation() {
   const confirmation = document.querySelector('.link-addition-confirmation');
-  confirmation.classList.add('hidden');
+  confirmation.style.opacity = '0';
+  // timeout must match transition timing
+  setTimeout(() => confirmation.classList.add('hidden'), 400);
 }
 
 /**
@@ -120,9 +114,8 @@ function updateLink() {
 function deleteLink() {
 }
 
-// TODO: include pagination
 /**
- * get bookmarks from database and render
+ * get bookmarks from database and render them in the application
  * @param pageNumber
  */
 function renderBookmarks(pageNumber = pagination.currentPage) {
@@ -140,7 +133,7 @@ function renderBookmarks(pageNumber = pagination.currentPage) {
 }
 
 /**
- * visualize links in application
+ * visualize links in application according to page number
  * @param links
  * @param pageNumber
  */
@@ -177,7 +170,7 @@ function renderLinks(links, pageNumber) {
 }
 
 /**
- * update pagination
+ * show next, previous and page numbers
  */
 function renderPagination() {
   const prev = document.querySelector('.page-nav.prev');
@@ -188,8 +181,7 @@ function renderPagination() {
   if (numberOfPages === 1) {
     prev.classList.add('disabled');
     next.classList.add('disabled');
-  }
-  else {
+  } else {
     prev.classList.remove('disabled');
     next.classList.remove('disabled');
   }

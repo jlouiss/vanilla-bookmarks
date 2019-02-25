@@ -187,6 +187,7 @@ section.link-addition-confirmation {
   position: fixed;
   right: 0;
   top: 0;
+  transition: all .4s ease-in-out;
 }
 
 section.link-addition-confirmation.hidden {
