@@ -139,6 +139,14 @@ section.bookmark-list > ul > li.bookmark a:hover {
 section.bookmark-list > ul > li.bookmark a:visited {
   color: var(--grey-light);
 }
+
+section.bookmark-list > ul > li.bookmark .delete {
+  cursor: pointer;
+}
+
+section.bookmark-list > ul > li.bookmark .delete:hover {
+  color: var(--red) !important;
+}
 /** Bookmark List **/
 
 

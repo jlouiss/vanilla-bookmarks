@@ -55,7 +55,7 @@ function addLink(event) {
   event.preventDefault();
   const url = document.querySelector('input#url').value;
   const name = document.querySelector('input#name').value;
-  const request = window.indexedDB.open(DB_NAME, 1);
+  const request = window.indexedDB.open(DB_NAME, DB_VERSION);
 
   request.onerror = console.error;
   request.onsuccess = event => {
@@ -101,7 +101,6 @@ function resetForm() {
   document.querySelectorAll('.submit-link-form form input').forEach(input => input.value = '');
 }
 
-
 // TODO: editLink (replace with input field)
 function editLink() {
 }
@@ -119,16 +118,29 @@ function deleteLink() {
  * @param pageNumber
  */
 function renderBookmarks(pageNumber = pagination.currentPage) {
-  const request = window.indexedDB.open(DB_NAME, 1);
-  request.onerror = console.error;
-  request.onsuccess = () => {
-    const DB = request.result;
-    const transaction = DB.transaction(OBJECT_STORE_NAME, 'readwrite');
-    const objectStore = transaction.objectStore(OBJECT_STORE_NAME);
-    const readRequest = objectStore.getAll();
+  const dbRequest = window.indexedDB.open(DB_NAME, DB_VERSION);
 
-    readRequest.onerror = console.error;
-    readRequest.onsuccess = () => renderLinks(readRequest.result, pageNumber)
+  dbRequest.onerror = console.error;
+  dbRequest.onsuccess = () => {
+    const db = dbRequest.result;
+    const transaction = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+    const object_store = transaction.objectStore(OBJECT_STORE_NAME);
+    const cursorRequest = object_store.openCursor();
+    const bookmarks = [];
+
+    cursorRequest.onerror = console.error;
+    cursorRequest.onsuccess = () => {
+      // using the cursor you can also get the key.
+      let cursor = cursorRequest.result;
+      if (cursor) {
+        const { primaryKey: key, value } = cursor;
+        const bookmark = { key, ...value };
+        bookmarks.push(bookmark);
+        cursor.continue();
+      }
+      else
+        renderLinks(bookmarks, pageNumber);
+    };
   };
 }
 
@@ -152,17 +164,26 @@ function renderLinks(links, pageNumber) {
       const listElement = document.createElement('li');
       const anchor = document.createElement('a');
       const name = document.createTextNode(`${link.name} - `);
+      const separator = document.createTextNode(' - ');
       const text = document.createTextNode(link.url);
+      const deleteLink = document.createElement('a');
+      const deleteText = document.createTextNode('delete');
 
       anchor.title = link.url;
       anchor.href = link.url;
       anchor.setAttribute('target', '_blank');
-      anchor.setAttribute('data-key', link.id);
+      anchor.setAttribute('data-key', link.key);
+      anchor.appendChild(text);
+
+      deleteLink.setAttribute('data-key', link.key);
+      deleteLink.appendChild(deleteText);
+      deleteLink.classList.add('delete');
       listElement.classList.add('bookmark');
 
-      anchor.appendChild(text); // text into <a>
       listElement.appendChild(name); // text into <li>
       listElement.appendChild(anchor); // <a> into <li>
+      listElement.appendChild(separator); // separator into <li>
+      listElement.appendChild(deleteLink); // add <a>delete</a> into <li>
       bookmarkList.appendChild(listElement); // <li> into <ul>
     });
 
