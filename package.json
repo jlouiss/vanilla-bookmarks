@@ -1,0 +1,25 @@
+{
+  "name": "bookmarks",
+  "version": "1.0.0",
+  "description": "This application allows the user to store his favorite bookmarks. It is made by two main parts, the insertion form (which also works as update form) and the visualization.",
+  "main": ".eslintrc.js",
+  "dependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-google": "^0.12.0",
+    "node-static": "^0.7.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlouiss/vanilla-bookmarks.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlouiss/vanilla-bookmarks/issues"
+  },
+  "homepage": "https://github.com/jlouiss/vanilla-bookmarks#readme"
+}
