@@ -12,3 +12,4 @@ Due to the same time constraints I opted for a minimal design recalling the styl
 Given more time I would have improved these interactions as well as the code structure.
 I also would have opted for a more interactive interface with more animations and a better user interaction.
 
+I didn't have time to do thorough testing and I only used google chrome throughout the development process. You might incur into CORS issues, which are easily solvable using this extension (on chrome): [https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en](https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en)
